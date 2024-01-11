@@ -1,0 +1,10 @@
+body {
+    background-color: #123;
+    color:#fff;
+}
+
+div.board{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
