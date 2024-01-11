@@ -1,1 +1,10 @@
-export default function App() {}
+import { Board } from "./Board";
+import "./App.css";
+
+export default function App() {
+  return (
+    <>
+      <Board />
+    </>
+  );
+}
