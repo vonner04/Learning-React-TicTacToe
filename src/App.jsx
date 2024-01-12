@@ -1,21 +1,79 @@
 import Board from "./Board";
 import Square from "./Square";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 const defaultSquares = () => new Array(9).fill(null);
+const filledSquares = (square) => square !== null;
 
+const winningCombos = [
+  [0, 1, 2], //Horizontal
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6], //Vertical
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8], //Diagonal
+  [2, 4, 6],
+];
 export default function App() {
   const [squares, setSquares] = useState(defaultSquares());
 
+  useEffect(() => {
+    //Check for the winner
+    const linesThatAre = (a, b, c) => {
+      return winningCombos.filter((squareIndexes) => {
+        const squareValues = squareIndexes.map((index) => squares[index]);
+        return (
+          JSON.stringify([a, b, c].sort()) ===
+          JSON.stringify(squareValues.sort())
+        );
+      });
+    };
+
+    const playerWon = linesThatAre("x", "x", "x").length > 0;
+    const computerWon = linesThatAre("o", "o", "o").length > 0;
+
+    if (playerWon) {
+      alert("You won!");
+      setSquares(defaultSquares());
+    }
+
+    if (computerWon) {
+      alert("You lost!");
+      setSquares(defaultSquares());
+    }
+
+    const isComputerTurn = squares.filter(filledSquares).length % 2 === 1; //Computer turn only happens if box is empty or odd number of filled squares.
+    //Let the computer make a move
+    const putComputerTurn = (index) => {
+      let newSquares = squares;
+      newSquares[index] = "o";
+      setSquares([...newSquares]);
+    };
+
+    //Determine the empty square that the computer will fill.
+    if (!isComputerTurn) return;
+
+    //Get the index of the empty squares.
+    const emptySquares = squares
+      .map((square, index) => (square === null ? index : null))
+      .filter((val) => val !== null);
+
+    //Decide which random square to fill.
+    const randomSquare =
+      emptySquares[Math.ceil(Math.random() * emptySquares.length)];
+
+    putComputerTurn(randomSquare);
+  }, [squares]);
+
   function handleSquareClick(index) {
     //Check for the amount of filled squares
-    const filledSquares = (square) => square !== null;
-    const isPlayerTurn = squares.filter(filledSquares).length % 2 === 0;
+    const isPlayerTurn = squares.filter(filledSquares).length % 2 === 0; //Player turn only happens if box is empty or even number of filled squares.
 
     //Determine if it's the player's turn
-    if (!isPlayerTurn) return;
     let newSquares = squares;
+    if (!isPlayerTurn) return;
     newSquares[index] = "x";
     setSquares([...newSquares]);
   }
