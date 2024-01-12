@@ -73,7 +73,7 @@ export default function App() {
 
     //Determine if it's the player's turn
     let newSquares = squares;
-    if (!isPlayerTurn) return;
+    if (!isPlayerTurn || newSquares[index] === "o") return;
     newSquares[index] = "x";
     setSquares([...newSquares]);
   }
