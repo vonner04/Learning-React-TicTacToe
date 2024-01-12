@@ -5,7 +5,8 @@ body {
 
 main{
     width:300px;
-    margin: 100px auto 0;
+    margin: 200px auto 0;
+    
 }
 
 div.board{
@@ -13,11 +14,18 @@ div.board{
     border: 2px solid #fff;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
+    
 }
 
 div.square{
+    display:grid;
     width:100px;
     height:100px;
     border:2px solid #fff;
     box-sizing: border-box;
+    font-size: 4rem;
+    text-align: center;
+    align-content: center;
+
 }
+
