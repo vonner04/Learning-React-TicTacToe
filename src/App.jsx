@@ -51,15 +51,33 @@ export default function App() {
       newSquares[index] = "o";
       setSquares([...newSquares]);
     };
-
-    //Determine the empty square that the computer will fill.
-    if (!isComputerTurn) return;
-
     //Get the index of the empty squares.
     const emptySquares = squares
       .map((square, index) => (square === null ? index : null))
       .filter((val) => val !== null);
 
+    //Determine the empty square that the computer will fill.
+    if (!isComputerTurn) return;
+
+    //Block player from winning
+    const blockingMove = linesThatAre("x", "x", null);
+    if (blockingMove.length > 0) {
+      const blockTurn = blockingMove[0].filter(
+        (index) => squares[index] === null
+      );
+      putComputerTurn(blockTurn);
+      return;
+    }
+
+    //Greedy algorithm to force win condition if possible
+    const winningMove = linesThatAre("o", "o", null);
+    if (winningMove.length > 0) {
+      const winTurn = winningMove[0].filter(
+        (index) => squares[index] === null
+      )[0];
+      putComputerTurn(winTurn);
+      return;
+    }
     //Decide which random square to fill.
     const randomSquare =
       emptySquares[Math.ceil(Math.random() * emptySquares.length)];
