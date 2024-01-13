@@ -37,16 +37,24 @@ export default function App() {
     if (playerWon) {
       alert("You won!");
       setSquares(defaultSquares());
+      return;
     }
 
     if (computerWon) {
       alert("You lost!");
       setSquares(defaultSquares());
+      return;
+    }
+
+    if (!squares.includes(null)) {
+      alert("It's a draw!");
+      setSquares(defaultSquares());
+      return;
     }
 
     const isComputerTurn = squares.filter(filledSquares).length % 2 === 1; //Computer turn only happens if box is empty or odd number of filled squares.
     //Let the computer make a move
-    const putComputerTurn = (index) => {
+    const putComputerTurnAt = (index) => {
       let newSquares = squares;
       newSquares[index] = "o";
       setSquares([...newSquares]);
@@ -59,30 +67,41 @@ export default function App() {
     //Determine the empty square that the computer will fill.
     if (!isComputerTurn) return;
 
-    //Block player from winning
-    const blockingMove = linesThatAre("x", "x", null);
-    if (blockingMove.length > 0) {
-      const blockTurn = blockingMove[0].filter(
-        (index) => squares[index] === null
-      );
-      putComputerTurn(blockTurn);
-      return;
-    }
-
     //Greedy algorithm to force win condition if possible
     const winningMove = linesThatAre("o", "o", null);
     if (winningMove.length > 0) {
       const winTurn = winningMove[0].filter(
         (index) => squares[index] === null
       )[0];
-      putComputerTurn(winTurn);
+      putComputerTurnAt(winTurn);
       return;
     }
+
+    //Block player from winning
+    const blockingMove = linesThatAre("x", "x", null);
+    if (blockingMove.length > 0) {
+      const blockTurn = blockingMove[0].filter(
+        (index) => squares[index] === null
+      );
+      putComputerTurnAt(blockTurn);
+      return;
+    }
+
+    //Fill the square that will lead to two in a row
+    const strongMove = linesThatAre("o", null, null);
+    if (strongMove.length > 0) {
+      const strongTurn = strongMove[0].filter(
+        (index) => squares[index] === null
+      )[0];
+      putComputerTurnAt(strongTurn);
+      return;
+    }
+
     //Decide which random square to fill.
     const randomSquare =
       emptySquares[Math.ceil(Math.random() * emptySquares.length)];
 
-    putComputerTurn(randomSquare);
+    putComputerTurnAt(randomSquare);
   }, [squares]);
 
   function handleSquareClick(index) {
