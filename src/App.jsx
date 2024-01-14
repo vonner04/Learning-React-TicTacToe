@@ -1,5 +1,6 @@
 import Board from "./Board";
 import Square from "./Square";
+import GameOver from "./GameOver";
 import { useState, useEffect } from "react";
 import "./App.css";
 
@@ -118,6 +119,7 @@ export default function App() {
   return (
     <>
       <main>
+        <h1>Tic Tac Toe</h1>
         <Board>
           {
             //Populate the grid
@@ -130,6 +132,7 @@ export default function App() {
             ))
           }
         </Board>
+        <GameOver></GameOver>
       </main>
     </>
   );
