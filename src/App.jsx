@@ -40,18 +40,21 @@ export default function App() {
     if (playerWon) {
       alert("You won!");
       setSquares(defaultSquares());
+      setGameState(GameState.PLAYER_WON);
       return;
     }
 
     if (computerWon) {
       alert("You lost!");
       setSquares(defaultSquares());
+      setGameState(GameState.COMPUTER_WON);
       return;
     }
 
     if (!squares.includes(null)) {
       alert("It's a draw!");
       setSquares(defaultSquares());
+      setGameState(GameState.DRAW);
       return;
     }
 
