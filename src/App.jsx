@@ -8,20 +8,36 @@ import "./App.css";
 const defaultSquares = () => new Array(9).fill(null);
 const filledSquares = (square) => square !== null;
 
-const winningCombos = [
-  [0, 1, 2], //Horizontal
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6], //Vertical
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8], //Diagonal
-  [2, 4, 6],
+// const winningCombos = [
+//   [0, 1, 2], //Horizontal
+//   [3, 4, 5],
+//   [6, 7, 8],
+//   [0, 3, 6], //Vertical
+//   [1, 4, 7],
+//   [2, 5, 8],
+//   [0, 4, 8], //Diagonal
+//   [2, 4, 6],
+// ]; //Original winning combos
+
+const winningLines = [
+  //Rows
+  { combo: [0, 1, 2], strikeClass: "strike-row-1" },
+  { combo: [3, 4, 5], strikeClass: "strike-row-2" },
+  { combo: [6, 7, 8], strikeClass: "strike-row-3" },
+
+  //Columns
+  { combo: [0, 3, 6], strikeClass: "strike-column-1" },
+  { combo: [1, 4, 7], strikeClass: "strike-column-2" },
+  { combo: [2, 5, 8], strikeClass: "strike-column-3" },
+
+  //Diagonals
+  { combo: [0, 4, 8], strikeClass: "strike-diagonal-1" },
+  { combo: [2, 4, 6], strikeClass: "strike-diagonal-2" },
 ];
 export default function App() {
   const [squares, setSquares] = useState(defaultSquares());
   const [gameState, setGameState] = useState(GameState.PLAYING);
-  const [strikeClass, setStrikeClass] = useState("strike-row-1");
+  const [strikeClass, setStrikeClass] = useState("strike-diagonal-1");
 
   useEffect(() => {
     //Check for the winner
