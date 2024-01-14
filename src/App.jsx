@@ -1,6 +1,7 @@
 import Board from "./Board";
 import Square from "./Square";
 import GameOver from "./GameOver";
+import GameState from "./GameState";
 import { useState, useEffect } from "react";
 import "./App.css";
 
@@ -19,6 +20,7 @@ const winningCombos = [
 ];
 export default function App() {
   const [squares, setSquares] = useState(defaultSquares());
+  const [gameState, setGameState] = useState(GameState.PLAYING);
 
   useEffect(() => {
     //Check for the winner
@@ -132,7 +134,7 @@ export default function App() {
             ))
           }
         </Board>
-        <GameOver></GameOver>
+        <GameOver gameState={gameState}></GameOver>
       </main>
     </>
   );
