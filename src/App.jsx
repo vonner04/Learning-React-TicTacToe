@@ -2,6 +2,7 @@ import Board from "./Board";
 import Square from "./Square";
 import GameOver from "./GameOver";
 import GameState from "./GameState";
+import Strike from "./Strike";
 import { useState, useEffect } from "react";
 import "./App.css";
 
@@ -122,18 +123,20 @@ export default function App() {
     <>
       <main>
         <h1>Tic Tac Toe</h1>
-        <Board>
-          {
-            //Populate the grid
-            squares.map((square, index) => (
-              <Square
-                x={square === "x" ? 1 : 0}
-                o={square === "o" ? 1 : 0}
-                onClick={() => handleSquareClick(index)}
-              />
-            ))
-          }
-        </Board>
+        <div className="board-strike-container">
+          <Board>
+            {
+              //Populate the grid
+              squares.map((square, index) => (
+                <Square
+                  x={square === "x" ? 1 : 0}
+                  o={square === "o" ? 1 : 0}
+                  onClick={() => handleSquareClick(index)}
+                />
+              ))
+            }
+          </Board>
+        </div>
         <GameOver gameState={gameState}></GameOver>
       </main>
     </>
