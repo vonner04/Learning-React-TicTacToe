@@ -75,17 +75,20 @@ div.square{
   .strike-column-1 {
     height: 100%;
     width: 4px;
-    left: 15%;
+    left: 17%;
+    top: 0;
   }
   .strike-column-2 {
     height: 100%;
     width: 4px;
-    left: 48%;
+    left: 50%;
+    top: 0;
   }
   .strike-column-3 {
     height: 100%;
     width: 4px;
-    left: 83%;
+    left: 83.5%;
+    top: 0;
   }
   .strike-diagonal-1 {
     width: 90%;

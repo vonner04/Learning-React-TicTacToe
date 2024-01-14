@@ -2,7 +2,6 @@ import Board from "./Board";
 import Square from "./Square";
 import GameOver from "./GameOver";
 import GameState from "./GameState";
-import Strike from "./Strike";
 import { useState, useEffect } from "react";
 import "./App.css";
 
@@ -22,6 +21,7 @@ const winningCombos = [
 export default function App() {
   const [squares, setSquares] = useState(defaultSquares());
   const [gameState, setGameState] = useState(GameState.PLAYING);
+  const [strikeClass, setStrikeClass] = useState("strike-row-1");
 
   useEffect(() => {
     //Check for the winner
@@ -124,7 +124,7 @@ export default function App() {
       <main>
         <h1>Tic Tac Toe</h1>
         <div className="board-strike-container">
-          <Board>
+          <Board strikeClass={strikeClass}>
             {
               //Populate the grid
               squares.map((square, index) => (

@@ -1,10 +1,10 @@
 import Strike from "./Strike";
 
-export default function Board(props, { strikeClass }) {
+export default function Board({ strikeClass, ...props }) {
   return (
     <>
       <div className="board" {...props} />
-      <Strike className={strikeClass} />
+      <Strike strikeClass={strikeClass} />
     </>
   );
 }
