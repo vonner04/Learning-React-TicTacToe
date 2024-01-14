@@ -38,21 +38,18 @@ export default function App() {
     const computerWon = linesThatAre("o", "o", "o").length > 0;
 
     if (playerWon) {
-      alert("You won!");
       setSquares(defaultSquares());
       setGameState(GameState.PLAYER_WON);
       return;
     }
 
     if (computerWon) {
-      alert("You lost!");
       setSquares(defaultSquares());
       setGameState(GameState.COMPUTER_WON);
       return;
     }
 
     if (!squares.includes(null)) {
-      alert("It's a draw!");
       setSquares(defaultSquares());
       setGameState(GameState.DRAW);
       return;
