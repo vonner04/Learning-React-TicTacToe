@@ -36,6 +36,7 @@ div.square{
 }
 
 .game-over{
+    position: relative;
     text-align: center;
     font-size: 30px;
     padding: 10px;
@@ -54,7 +55,7 @@ div.square{
 
 .strike {
     position: absolute;
-    background-color: darkorange;
+    background-color: rgb(150, 211, 7);
   }
   
   .strike-row-1 {

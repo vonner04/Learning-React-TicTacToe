@@ -8,18 +8,7 @@ import "./App.css";
 const defaultSquares = () => new Array(9).fill(null);
 const filledSquares = (square) => square !== null;
 
-// const winningCombos = [
-//   [0, 1, 2], //Horizontal
-//   [3, 4, 5],
-//   [6, 7, 8],
-//   [0, 3, 6], //Vertical
-//   [1, 4, 7],
-//   [2, 5, 8],
-//   [0, 4, 8], //Diagonal
-//   [2, 4, 6],
-// ]; //Original winning combos
-
-const winningLines = [
+const winningCombos = [
   //Rows
   { combo: [0, 1, 2], strikeClass: "strike-row-1" },
   { combo: [3, 4, 5], strikeClass: "strike-row-2" },
@@ -37,13 +26,13 @@ const winningLines = [
 export default function App() {
   const [squares, setSquares] = useState(defaultSquares());
   const [gameState, setGameState] = useState(GameState.PLAYING);
-  const [strikeClass, setStrikeClass] = useState("strike-diagonal-1");
+  const [strikeClass, setStrikeClass] = useState();
 
   useEffect(() => {
     //Check for the winner
     const linesThatAre = (a, b, c) => {
-      return winningCombos.filter((squareIndexes) => {
-        const squareValues = squareIndexes.map((index) => squares[index]);
+      return winningCombos.filter(({ combo, strikeClass }) => {
+        const squareValues = combo.map((index) => squares[index]);
         return (
           JSON.stringify([a, b, c].sort()) ===
           JSON.stringify(squareValues.sort())
@@ -53,15 +42,20 @@ export default function App() {
 
     const playerWon = linesThatAre("x", "x", "x").length > 0;
     const computerWon = linesThatAre("o", "o", "o").length > 0;
+    if (playerWon || computerWon) {
+      setStrikeClass(
+        playerWon
+          ? linesThatAre("x", "x", "x")[0].strikeClass
+          : linesThatAre("o", "o", "o")[0].strikeClass
+      );
+    }
 
     if (playerWon) {
-      setSquares(defaultSquares());
       setGameState(GameState.PLAYER_WON);
       return;
     }
 
     if (computerWon) {
-      setSquares(defaultSquares());
       setGameState(GameState.COMPUTER_WON);
       return;
     }
@@ -79,6 +73,7 @@ export default function App() {
       newSquares[index] = "o";
       setSquares([...newSquares]);
     };
+
     //Get the index of the empty squares.
     const emptySquares = squares
       .map((square, index) => (square === null ? index : null))
@@ -90,7 +85,7 @@ export default function App() {
     //Greedy algorithm to force win condition if possible
     const winningMove = linesThatAre("o", "o", null);
     if (winningMove.length > 0) {
-      const winTurn = winningMove[0].filter(
+      const winTurn = winningMove[0].combo.filter(
         (index) => squares[index] === null
       )[0];
       putComputerTurnAt(winTurn);
@@ -100,7 +95,7 @@ export default function App() {
     //Block player from winning
     const blockingMove = linesThatAre("x", "x", null);
     if (blockingMove.length > 0) {
-      const blockTurn = blockingMove[0].filter(
+      const blockTurn = blockingMove[0].combo.filter(
         (index) => squares[index] === null
       );
       putComputerTurnAt(blockTurn);
@@ -110,7 +105,7 @@ export default function App() {
     //Fill the square that will lead to two in a row
     const strongMove = linesThatAre("o", null, null);
     if (strongMove.length > 0) {
-      const strongTurn = strongMove[0].filter(
+      const strongTurn = strongMove[0].combo.filter(
         (index) => squares[index] === null
       )[0];
       putComputerTurnAt(strongTurn);
