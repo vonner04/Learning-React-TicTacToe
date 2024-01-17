@@ -1,5 +1,8 @@
 import Board from "./Board";
 import Square from "./Square";
+import GameOver from "./GameOver";
+import GameState from "./GameState";
+import Reset from "./Reset";
 import { useState, useEffect } from "react";
 import "./App.css";
 
@@ -7,23 +10,31 @@ const defaultSquares = () => new Array(9).fill(null);
 const filledSquares = (square) => square !== null;
 
 const winningCombos = [
-  [0, 1, 2], //Horizontal
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6], //Vertical
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8], //Diagonal
-  [2, 4, 6],
+  //Rows
+  { combo: [0, 1, 2], strikeClass: "strike-row-1" },
+  { combo: [3, 4, 5], strikeClass: "strike-row-2" },
+  { combo: [6, 7, 8], strikeClass: "strike-row-3" },
+
+  //Columns
+  { combo: [0, 3, 6], strikeClass: "strike-column-1" },
+  { combo: [1, 4, 7], strikeClass: "strike-column-2" },
+  { combo: [2, 5, 8], strikeClass: "strike-column-3" },
+
+  //Diagonals
+  { combo: [0, 4, 8], strikeClass: "strike-diagonal-1" },
+  { combo: [2, 4, 6], strikeClass: "strike-diagonal-2" },
 ];
 export default function App() {
   const [squares, setSquares] = useState(defaultSquares());
+  const [gameState, setGameState] = useState(GameState.PLAYING);
+  const [strikeClass, setStrikeClass] = useState();
 
   useEffect(() => {
     //Check for the winner
+    if (gameState !== GameState.PLAYING) return;
     const linesThatAre = (a, b, c) => {
-      return winningCombos.filter((squareIndexes) => {
-        const squareValues = squareIndexes.map((index) => squares[index]);
+      return winningCombos.filter(({ combo, strikeClass }) => {
+        const squareValues = combo.map((index) => squares[index]);
         return (
           JSON.stringify([a, b, c].sort()) ===
           JSON.stringify(squareValues.sort())
@@ -34,21 +45,26 @@ export default function App() {
     const playerWon = linesThatAre("x", "x", "x").length > 0;
     const computerWon = linesThatAre("o", "o", "o").length > 0;
 
+    if (playerWon || computerWon) {
+      setStrikeClass(
+        playerWon
+          ? linesThatAre("x", "x", "x")[0].strikeClass
+          : linesThatAre("o", "o", "o")[0].strikeClass
+      );
+    }
+
     if (playerWon) {
-      alert("You won!");
-      setSquares(defaultSquares());
+      setGameState(GameState.PLAYER_WON);
       return;
     }
 
     if (computerWon) {
-      alert("You lost!");
-      setSquares(defaultSquares());
+      setGameState(GameState.COMPUTER_WON);
       return;
     }
 
     if (!squares.includes(null)) {
-      alert("It's a draw!");
-      setSquares(defaultSquares());
+      setGameState(GameState.DRAW);
       return;
     }
 
@@ -59,6 +75,7 @@ export default function App() {
       newSquares[index] = "o";
       setSquares([...newSquares]);
     };
+
     //Get the index of the empty squares.
     const emptySquares = squares
       .map((square, index) => (square === null ? index : null))
@@ -70,7 +87,7 @@ export default function App() {
     //Greedy algorithm to force win condition if possible
     const winningMove = linesThatAre("o", "o", null);
     if (winningMove.length > 0) {
-      const winTurn = winningMove[0].filter(
+      const winTurn = winningMove[0].combo.filter(
         (index) => squares[index] === null
       )[0];
       putComputerTurnAt(winTurn);
@@ -80,7 +97,7 @@ export default function App() {
     //Block player from winning
     const blockingMove = linesThatAre("x", "x", null);
     if (blockingMove.length > 0) {
-      const blockTurn = blockingMove[0].filter(
+      const blockTurn = blockingMove[0].combo.filter(
         (index) => squares[index] === null
       );
       putComputerTurnAt(blockTurn);
@@ -90,7 +107,7 @@ export default function App() {
     //Fill the square that will lead to two in a row
     const strongMove = linesThatAre("o", null, null);
     if (strongMove.length > 0) {
-      const strongTurn = strongMove[0].filter(
+      const strongTurn = strongMove[0].combo.filter(
         (index) => squares[index] === null
       )[0];
       putComputerTurnAt(strongTurn);
@@ -105,6 +122,7 @@ export default function App() {
   }, [squares]);
 
   function handleSquareClick(index) {
+    if (gameState !== GameState.PLAYING) return; //Game is over, no more moves.
     //Check for the amount of filled squares
     const isPlayerTurn = squares.filter(filledSquares).length % 2 === 0; //Player turn only happens if box is empty or even number of filled squares.
 
@@ -115,21 +133,32 @@ export default function App() {
     setSquares([...newSquares]);
   }
 
+  function handleReset() {
+    setSquares(defaultSquares());
+    setGameState(GameState.PLAYING);
+    setStrikeClass(null);
+  }
+
   return (
     <>
       <main>
-        <Board>
-          {
-            //Populate the grid
-            squares.map((square, index) => (
-              <Square
-                x={square === "x" ? 1 : 0}
-                o={square === "o" ? 1 : 0}
-                onClick={() => handleSquareClick(index)}
-              />
-            ))
-          }
-        </Board>
+        <h1>Tic Tac Toe</h1>
+        <div className="board-strike-container">
+          <Board strikeClass={strikeClass}>
+            {
+              //Populate the grid
+              squares.map((square, index) => (
+                <Square
+                  x={square === "x" ? 1 : 0}
+                  o={square === "o" ? 1 : 0}
+                  onClick={() => handleSquareClick(index)}
+                />
+              ))
+            }
+          </Board>
+        </div>
+        <GameOver gameState={gameState}></GameOver>
+        <Reset gameState={gameState} onReset={handleReset}></Reset>
       </main>
     </>
   );

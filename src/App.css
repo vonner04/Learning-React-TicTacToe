@@ -3,15 +3,22 @@ body {
     color:#fff;
 }
 
+h1{
+    text-align: center;
+    font-size: 3rem;
+     padding: 0;
+    color: #fff;
+}
+
 main{
-    width:300px;
+    width: 300px;
     margin: 200px auto 0;
     
 }
 
 div.board{
     display:grid;
-    border: 2px solid #fff;
+    border: 2px solid rgb(255, 171, 16);
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     
@@ -21,11 +28,92 @@ div.square{
     display:grid;
     width:100px;
     height:100px;
-    border:2px solid #fff;
+    border:2px solid rgb(255, 171, 16);
     box-sizing: border-box;
     font-size: 4rem;
     text-align: center;
     align-content: center;
-
 }
 
+.game-over{
+    position: relative;
+    text-align: center;
+    font-size: 30px;
+    padding: 10px;
+    color: white;
+    border: lightskyblue dashed 4px;
+    margin-top: 25px;
+    padding: 1rem;
+}
+
+.reset-button {
+  margin-top: 25px;
+  padding: 20px;
+  background-color: #0074a6;
+  color: white;
+  width: 100%;
+  font-size: 1.5em;
+  border: rgb(255, 171, 16) solid 1px;
+}
+
+.board-strike-container{
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+
+.strike {
+    position: absolute;
+    background-color: rgb(150, 211, 7);
+  }
+  
+  .strike-row-1 {
+    width: 100%;
+    height: 4px;
+    top: 15%;
+  }
+  .strike-row-2 {
+    width: 100%;
+    height: 4px;
+    top: 48%;
+  }
+  .strike-row-3 {
+    width: 100%;
+    height: 4px;
+    top: 83%;
+  }
+  .strike-column-1 {
+    height: 100%;
+    width: 4px;
+    left: 17%;
+    top: 0;
+  }
+  .strike-column-2 {
+    height: 100%;
+    width: 4px;
+    left: 50%;
+    top: 0;
+  }
+  .strike-column-3 {
+    height: 100%;
+    width: 4px;
+    left: 83.5%;
+    top: 0;
+  }
+  .strike-diagonal-1 {
+    width: 90%;
+    height: 4px;
+    top: 50%;
+    left: 5%;
+    transform: skewY(45deg);
+  }
+  .strike-diagonal-2 {
+    width: 90%;
+    height: 4px;
+    top: 50%;
+    left: 5%;
+    transform: skewY(-45deg);
+  }
+
+  
