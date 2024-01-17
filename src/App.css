@@ -40,10 +40,20 @@ div.square{
     text-align: center;
     font-size: 30px;
     padding: 10px;
-    color: lightgreen;
+    color: white;
     border: lightskyblue dashed 4px;
     margin-top: 25px;
     padding: 1rem;
+}
+
+.reset-button {
+  margin-top: 25px;
+  padding: 20px;
+  background-color: #0074a6;
+  color: white;
+  width: 100%;
+  font-size: 1.5em;
+  border: rgb(255, 171, 16) solid 1px;
 }
 
 .board-strike-container{
@@ -105,3 +115,5 @@ div.square{
     left: 5%;
     transform: skewY(-45deg);
   }
+
+  

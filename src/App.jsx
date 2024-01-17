@@ -2,6 +2,7 @@ import Board from "./Board";
 import Square from "./Square";
 import GameOver from "./GameOver";
 import GameState from "./GameState";
+import Reset from "./Reset";
 import { useState, useEffect } from "react";
 import "./App.css";
 
@@ -30,6 +31,7 @@ export default function App() {
 
   useEffect(() => {
     //Check for the winner
+    if (gameState !== GameState.PLAYING) return;
     const linesThatAre = (a, b, c) => {
       return winningCombos.filter(({ combo, strikeClass }) => {
         const squareValues = combo.map((index) => squares[index]);
@@ -42,6 +44,7 @@ export default function App() {
 
     const playerWon = linesThatAre("x", "x", "x").length > 0;
     const computerWon = linesThatAre("o", "o", "o").length > 0;
+
     if (playerWon || computerWon) {
       setStrikeClass(
         playerWon
@@ -61,7 +64,6 @@ export default function App() {
     }
 
     if (!squares.includes(null)) {
-      setSquares(defaultSquares());
       setGameState(GameState.DRAW);
       return;
     }
@@ -120,6 +122,7 @@ export default function App() {
   }, [squares]);
 
   function handleSquareClick(index) {
+    if (gameState !== GameState.PLAYING) return; //Game is over, no more moves.
     //Check for the amount of filled squares
     const isPlayerTurn = squares.filter(filledSquares).length % 2 === 0; //Player turn only happens if box is empty or even number of filled squares.
 
@@ -128,6 +131,12 @@ export default function App() {
     if (!isPlayerTurn || newSquares[index] === "o") return;
     newSquares[index] = "x";
     setSquares([...newSquares]);
+  }
+
+  function handleReset() {
+    setSquares(defaultSquares());
+    setGameState(GameState.PLAYING);
+    setStrikeClass(null);
   }
 
   return (
@@ -149,6 +158,7 @@ export default function App() {
           </Board>
         </div>
         <GameOver gameState={gameState}></GameOver>
+        <Reset gameState={gameState} onReset={handleReset}></Reset>
       </main>
     </>
   );
