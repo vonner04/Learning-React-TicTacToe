@@ -1,10 +1,26 @@
-import Board from "./Board";
-import Square from "./Square";
-import GameOver from "./GameOver";
+import Board from "./components/Board";
+import Square from "./components/Square";
+import GameOver from "./components/GameOver";
 import GameState from "./GameState";
-import Reset from "./Reset";
+import Reset from "./components/Reset";
 import { useState, useEffect } from "react";
 import "./App.css";
+import gameOverSoundAsset from "./sounds/game-over.wav";
+import clickSoundAsset from "./sounds/click.wav";
+import resetSoundAsset from "./sounds/reset.wav";
+import loserSoundAsset from "./sounds/loser.wav";
+import winnerSoundAsset from "./sounds/winner.wav";
+
+const gameOverSound = new Audio(gameOverSoundAsset);
+gameOverSound.volume = 0.2;
+const clickSound = new Audio(clickSoundAsset);
+clickSound.volume = 0.5;
+const resetSound = new Audio(resetSoundAsset);
+resetSound.volume = 0.5;
+const loserSound = new Audio(loserSoundAsset);
+loserSound.volume = 0.5;
+const winnerSound = new Audio(winnerSoundAsset);
+winnerSound.volume = 0.5;
 
 const defaultSquares = () => new Array(9).fill(null);
 const filledSquares = (square) => square !== null;
@@ -51,6 +67,9 @@ export default function App() {
           ? linesThatAre("x", "x", "x")[0].strikeClass
           : linesThatAre("o", "o", "o")[0].strikeClass
       );
+      gameOverSound.play();
+      if (computerWon) loserSound.play();
+      if (playerWon) winnerSound.play();
     }
 
     if (playerWon) {
@@ -131,12 +150,26 @@ export default function App() {
     if (!isPlayerTurn || newSquares[index] === "o") return;
     newSquares[index] = "x";
     setSquares([...newSquares]);
+    clickSound.play();
   }
 
   function handleReset() {
     setSquares(defaultSquares());
     setGameState(GameState.PLAYING);
     setStrikeClass(null);
+    resetSound.play();
+    stopSound();
+  }
+
+  function stopSound() {
+    gameOverSound.pause();
+    gameOverSound.currentTime = 0;
+    loserSound.pause();
+    loserSound.currentTime = 0;
+    clickSound.pause();
+    clickSound.currentTime = 0;
+    winnerSound.pause();
+    winnerSound.currentTime = 0;
   }
 
   return (

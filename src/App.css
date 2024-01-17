@@ -65,7 +65,7 @@ div.square{
 
 .strike {
     position: absolute;
-    background-color: rgb(150, 211, 7);
+    background-color: white;
   }
   
   .strike-row-1 {
@@ -114,6 +114,14 @@ div.square{
     top: 50%;
     left: 5%;
     transform: skewY(-45deg);
+  }
+
+  .square[x="1"]{
+    color: rgb(0, 162, 255);
+  }
+
+  .square[o="1"]{
+    color: rgb(255, 48, 48);
   }
 
   
